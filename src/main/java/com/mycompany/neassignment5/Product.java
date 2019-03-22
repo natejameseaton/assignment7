@@ -24,32 +24,32 @@ import javax.xml.bind.annotation.XmlTransient;
  * @author c0711874
  */
 @NamedQueries(
-        @NamedQuery(name = "findOne", query = "SELECT p FROM ProductCode p WHERE p.prodCode = :prodCode"))
+        @NamedQuery(name = "findOneR", query = "SELECT r FROM Product r WHERE r.productId = :productId"))
 @Entity
-@Table(name = "PRODUCT_CODE")
-public class ProductCode {
+@Table(name = "PRODUCT")
+public class Product {
     @Id
-    @Column(name = "PROD_CODE")
-    private String prodCode;
-    @Column(name = "DISCOUNT_CODE")
-    private String discountCode;
+    @Column(name = "PRODUCT_ID")
+    private int productId;
+    @Column(name = "PRODUCT_CODE")
+    private String productCode;
     @Column(name = "DESCRIPTION")
     private String description;
 
-    public String getProdCode() {
-        return prodCode;
+    public int getProductId() {
+        return productId;
     }
 
-    public void setProdCode(String prodCode) {
-        this.prodCode = prodCode;
+    public void setProductId(int productId) {
+        this.productId = productId;
     }
 
-    public String getDiscountCode() {
-        return discountCode;
+    public String getProductCode() {
+        return productCode;
     }
 
-    public void setDiscountCode(String discountCode) {
-        this.discountCode = discountCode;
+    public void setProductCode(String productCode) {
+        this.productCode = productCode;
     }
 
     public String getDescription() {
@@ -59,6 +59,5 @@ public class ProductCode {
     public void setDescription(String description) {
         this.description = description;
     }
-
-    
+   
 }

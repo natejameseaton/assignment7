@@ -28,11 +28,11 @@ import javax.ws.rs.Produces;
  * @author c0711874
  */
 
-// http://localhost:8080/NEAssignment5/api/productCode
+// http://localhost:8080/NEAssignment5/api/product
 
-@Path("productCode")
+@Path("product")
 @ApplicationScoped
-public class ProductCodeREST {
+public class ProductREST {
 
     @PersistenceContext(unitName = "builditNE5")
     private EntityManager em;
@@ -40,16 +40,16 @@ public class ProductCodeREST {
     @Inject
     private UserTransaction transaction;
 
-    // http://localhost:8080/NEApplication5/api/productCode
+    // http://localhost:8080/NEApplication5/api/product
     /**
      * Uses a JPA Query to return the entire list as JSON.
-     * @return List of ProductCodes
+     * @return List of Products
      */
     @GET
     @Produces({"application/json"})
-    public List<ProductCode> getAll() {
-        List<ProductCode> productCodes = em.createQuery("SELECT p FROM ProductCode p").getResultList();
-        return productCodes;
+    public List<Product> getAll() {
+        List<Product> products = em.createQuery("SELECT r FROM Product r").getResultList();
+        return products;
     }
 
     /**
@@ -60,49 +60,40 @@ public class ProductCodeREST {
     @GET
     @Path("{id}")
     @Produces({"application/json"})
-    public List<ProductCode> getOne(@PathParam("id") String id) {
-        Query q = em.createNamedQuery("findOne");
-        q.setParameter("prodCode", id);
-        List<ProductCode> productCodes = q.getResultList();
-        return productCodes;
+    public List<Product> getOne(@PathParam("id") int id) {
+        Query q = em.createNamedQuery("findOneR");
+        q.setParameter("productId", id);
+        List<Product> products = q.getResultList();
+        return products;
     }
 
-    /**
-     * Saves an object received as a JSON payload.
-     * @param productCode 
-     */
     @POST
     @Consumes("application/json")
-    public void addOne(ProductCode productCode) {
+    public void addOne(Product product) {
         try {
             transaction.begin();
-            em.persist(productCode);
+            em.persist(product);
             transaction.commit();
         } catch (Exception ex) {
-            Logger.getLogger(ProductCodeREST.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductREST.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    /**
-     * Updates an existing Product Code based on an incoming JSON payload.
-     * @param productCode
-     * @param id 
-     */
     @PUT
     @Path("{id}")
     @Consumes("application/json")
-    public void editOne(ProductCode productCode, @PathParam("id") String id) {
+    public void editOne(Product product, @PathParam("id") int id) {
         try {
-            Query q = em.createQuery("SELECT p FROM ProductCode p WHERE p.prodCode = :id");
+            Query q = em.createQuery("SELECT r FROM Product r WHERE r.productId = :id");
             q.setParameter("id", id);
-            ProductCode savedPC = (ProductCode) q.getSingleResult();
-            savedPC.setDescription(productCode.getDescription());
-            savedPC.setDiscountCode(productCode.getDiscountCode());
+            Product savedR = (Product) q.getSingleResult();
+            savedR.setProductCode(product.getProductCode());
+            savedR.setDescription(product.getDescription());
             transaction.begin();
-            em.merge(savedPC);
+            em.merge(savedR);
             transaction.commit();
         } catch (Exception ex) {
-            Logger.getLogger(ProductCodeREST.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductREST.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -112,14 +103,14 @@ public class ProductCodeREST {
      */
     @DELETE
     @Path("{id}")
-    public void deleteOne(@PathParam("id") String id) {
+    public void deleteOne(@PathParam("id") int id) {
         try {
             transaction.begin();
-            ProductCode found = em.find(ProductCode.class, id);
+            Product found = em.find(Product.class, id);
             em.remove(found);
             transaction.commit();
         } catch (Exception ex) {
-            Logger.getLogger(ProductCodeREST.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ProductREST.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }
